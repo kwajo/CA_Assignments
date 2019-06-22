@@ -43,9 +43,13 @@ class Client:
 
 
     def send_message(self, message):
-            message = bytes(message,'UTF-8')
-            self.socket.send(message)
-            print('message delivered')
+        msg = bytes(message,'UTF-8')
+        self.socket.send(msg)
+        print('message delivered')
+    
+    def recieve_message(self):
+        data = self.socket.recv(self.BUFFSIZE)
+        return data
 
 c = Client()
 
@@ -53,4 +57,5 @@ c.create_socket()
 c.connect_to_server()
 while True:
     c.send_message('things and stuffs and shit')
+    print('Recieved: ',repr(c.recieve_message()))
     time.sleep(2)
