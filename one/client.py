@@ -1,15 +1,16 @@
 import socket
 import sys
 import time
+from datetime import datetime
 class Client:
 
     def __init__(self):
-        self.HOST_IP = '10.1.1.1'#124.169.15.130'#'49.181.246.235'
-        self.HOST_PORT = 80  #works on port 80 but not 5000 w definitly a firewall issue
+        self.HOST_IP = '10.1.1.10'#124.169.15.130'#'49.181.246.235'
+        self.HOST_PORT = 5000  #works on port 80 but not 5000 w definitly a firewall issue
         self.IPV4_ADDRESS = (self.HOST_IP,self.HOST_PORT)
         self.socket = None
         self.BUFFSIZE = 2048
-
+        self.msg_buffer = ''
     def create_socket(self):
         print("creating socket")
         '''
@@ -50,12 +51,18 @@ class Client:
     def recieve_message(self):
         data = self.socket.recv(self.BUFFSIZE)
         return data
+        
 
 c = Client()
-
+print(c.socket)
 c.create_socket()
+print(c.socket)
 c.connect_to_server()
+print(c.socket)
 while True:
-    c.send_message('things and stuffs and shit')
-    print('Recieved: ',repr(c.recieve_message()))
+    
+  
+    c.send_message('The time is : ' + str(datetime.now()))
+    recieved_msg = c.recieve_message()
+    print(recieved_msg.decode('utf-8'))
     time.sleep(2)
