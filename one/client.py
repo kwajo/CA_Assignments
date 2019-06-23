@@ -23,7 +23,6 @@ class Client:
         #use with to ensure connection is closed
         try:
             self.socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-            self.local_port = self.socket.getsockname()
             print('Socket Created')
         except socket.error as e:
             print (e)
@@ -31,10 +30,12 @@ class Client:
 
     def connect_to_server(self):
         print('Connecting to QwackChat')
-        print('Host address-->     {}:{}'.format(c.HOST_IP,c.HOST_PORT))
-        print('Local address-->    {}:{}'.format(self.local_port[0],self.local_port[1]))
+        
         try:
             self.socket.connect(self.IPV4_ADDRESS)
+            self.local_port = self.socket.getsockname()
+            print('Host address-->     {}:{}'.format(c.HOST_IP,c.HOST_PORT))
+            print('Local address-->    {}:{}'.format(self.local_port[0],self.local_port[1]))
             print("Connected @ {}".format(str(datetime.now())))
         except:
             print ('Connection to-->    {}:{} failed\nExiting'.format(self.HOST_IP,self.HOST_PORT))
@@ -53,8 +54,8 @@ class Client:
         
 def get_message_thread(c):
     while True:
-        recieved_msg = c.recieve_message()
-        print(recieved_msg.decode('utf-8'))    
+        recieved_msg = c.recieve_message().decode('utf-8')
+        print(recieved_msg)    
 
 
 
@@ -67,6 +68,5 @@ recv_thread.start()
 
 
 while True:
-    
-    message = input('$ ')
+    message = input('$: ')
     c.send_message(message)
