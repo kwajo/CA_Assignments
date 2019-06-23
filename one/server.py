@@ -3,8 +3,8 @@ import socket
 class Server:
 
     def __init__(self):
-        self.HOST_IP = str(socket.INADDR_ANY)
-        self.HOST_PORT = 80
+        self.HOST_IP = ''#str(socket.INADDR_ANY)
+        self.HOST_PORT = 5000
         self.IPV4_ADDRESS = (self.HOST_IP,self.HOST_PORT)
         self.socket = None
         self.BUFFSIZE = 2048
@@ -54,7 +54,7 @@ class Server:
         while True:
             data, client = conn.recvfrom(self.BUFFSIZE)
             data.decode('UTF-8')
-            print (data.decode('UTF-8'))
+            print ("data: {}".format(data.decode('UTF-8')))
             conn.sendall(bytes('sent: {}'.format(data),'UTF-8'));
 
 s = Server()
