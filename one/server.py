@@ -1,5 +1,3 @@
-import socket
-#Setup Socket
 class Server:
 
     def __init__(self):
@@ -53,8 +51,8 @@ class Server:
         print('connection formed with addr: {} and conn: {} '.format(addr,conn))
         while True:
             data, client = conn.recvfrom(self.BUFFSIZE)
-            data.decode('UTF-8')
-            print ("data: {}".format(data.decode('UTF-8')))
+            data = data.decode('UTF-8')
+            print ("data: {}".format(data))
             conn.sendall(bytes('sent: {}'.format(data),'UTF-8'));
 
 s = Server()
