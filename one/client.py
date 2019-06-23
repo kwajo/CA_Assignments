@@ -61,7 +61,7 @@ c.connect_to_server()
 print(c.socket)
 while True:
     
-  
+    
     c.send_message('The time is : ' + str(datetime.now()))
     recieved_msg = c.recieve_message()
     print(recieved_msg.decode('utf-8'))
