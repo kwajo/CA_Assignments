@@ -1,13 +1,19 @@
 import socket
+import threading
+import queue
 #Setup Socket
 class Server:
 
     def __init__(self):
-        self.HOST_IP = str(socket.INADDR_ANY)
-        self.HOST_PORT = 80
+        self.HOST_IP = ''#str(socket.INADDR_ANY)
+        self.HOST_PORT = 5000
         self.IPV4_ADDRESS = (self.HOST_IP,self.HOST_PORT)
         self.socket = None
         self.BUFFSIZE = 2048
+        self.connections = []
+        self.threads = []
+        self.queue = queue.Queue()
+
     '''
     this function should create a socket object
     '''
@@ -38,29 +44,79 @@ class Server:
             print(e)
 
 
-    '''
-    no idea how to test this yet
-    '''
-    def search(self,attempts=10):
+        #starts a new thread to echo text. this is to test if multiple servers will run together
 
-        #listen to port
+        #connection_receptor
+    def echo_server(self,conn,addr,queue):
+        print('Starting echo server at {}'.format(addr))
+        while True:
+            data, client = conn.recvfrom(self.BUFFSIZE)
+            if data:
+                data = data.decode('UTF-8')
+                print ("data: {}".format(data))
+                queue.put((data,addr))
+        '''    try:
+                conn.sendall(bytes('# {}'.format(data),'UTF-8'));
+            except:
+
+                print('Connection with {}:{} has ended'.format(addr[0],addr[1]))
+                break;
+'''
+    def broadcast_message_thread(self,queue):
+        print('starting_broadcast')
+        while True:
+            print('broadcast')
+            try:
+                data,origin_addr = queue.get()
+            except ValueError as e:
+                print (e)
+
+            for conn, addr in self.connections:
+                if origin_addr == addr:
+                    continue
+                try:
+                    conn.sendall(bytes('{}>{}'.format(addr,data),'UTF-8'))
+                except ValueError as e:
+                    print (e)
+
+    def broadcast_message(self,data,origin,override=True):
+        for conn, addr in self.connections:
+            if origin == addr:
+                continue
+            if override:
+                try:
+                    conn.sendall(bytes('{}'.format(data),'UTF-8'))
+                except ValueError as e:
+                    print(e)
+                return
+            try:
+                conn.sendall(bytes('{} # {}'.format(addr,data),'UTF-8'))
+            except ValueError as e:
+                print (e)
+    def launch(self,attempts=10):
+
+
+        broadcast_thread = threading.Thread(target=self.broadcast_message_thread,args=(self.queue,),daemon=True)
+        broadcast_thread.start()
         self.socket.listen(attempts)
 
         #accept connection
         print("looking for connection")
-        #while True:
-        conn,addr = self.socket.accept()
-        print('connection formed with addr: {} and conn: {} '.format(addr,conn))
+
         while True:
-            data, client = conn.recvfrom(self.BUFFSIZE)
-            data.decode('UTF-8')
-            print (data.decode('UTF-8'))
-            conn.sendall(bytes('sent: {}'.format(data),'UTF-8'));
+            conn,addr = self.socket.accept()
+            #print('connection formed with addr: {} and conn: {} '.format(addr,conn))
+            self.connections.append((conn,addr))
+            self.threads.append(threading.Thread(target=self.echo_server,args=(conn,addr,self.queue,),daemon=True))
+            self.threads[-1].start()
+            self.broadcast_message('{} Connected'.format(addr),addr)
+
+
+
 
 s = Server()
-
 s.create_socket()
-s.search()
+s.launch()
 
 
 
