@@ -2,6 +2,7 @@ import socket
 import sys
 import time
 from datetime import datetime
+import threading
 class Client:
 
     def __init__(self):
@@ -12,6 +13,7 @@ class Client:
         self.BUFFSIZE = 2048
         self.msg_buffer = ''
         self.local_port = ()
+
     def create_socket(self):
         print("Creating socket")
         
@@ -33,7 +35,7 @@ class Client:
         print('Local address-->    {}:{}'.format(self.local_port[0],self.local_port[1]))
         try:
             self.socket.connect(self.IPV4_ADDRESS)
-            print("Connected")
+            print("Connected @ {}".format(str(datetime.now())))
         except:
             print ('Connection to-->    {}:{} failed\nExiting'.format(self.HOST_IP,self.HOST_PORT))
             sys.exit()
@@ -49,17 +51,22 @@ class Client:
         data = self.socket.recv(self.BUFFSIZE)
         return data
         
+def get_message_thread(c):
+    while True:
+        recieved_msg = c.recieve_message()
+        print(recieved_msg.decode('utf-8'))    
+
+
 
 c = Client()
 c.create_socket()
 c.connect_to_server()
 
+recv_thread = threading.Thread(target=get_message_thread,args=(c,),daemon=True)
+recv_thread.start()
 
 
 while True:
     
-    
-    c.send_message('The time is : ' + str(datetime.now()))
-    recieved_msg = c.recieve_message()
-    print(recieved_msg.decode('utf-8'))
-    time.sleep(2)
+    message = input('$ ')
+    c.send_message(message)
