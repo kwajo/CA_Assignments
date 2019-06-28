@@ -66,9 +66,12 @@ class Client:
         finally:
             print('\nquitting')
             sys.exit()
+            
     def get_message_thread(self):
         while True:
+            print(self.HOST_PORT)
             recieved_msg = c.recieve_message().decode('utf-8')
+            print(recieved_msg)
             if recieved_msg == 'kill':
                 print('connection closed by server')
                 self.exit = True
