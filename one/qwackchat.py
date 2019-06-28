@@ -6,18 +6,21 @@ import time
 from datetime import datetime
 import threading
 import signal
+import gui
 
 class Client:
 
-    def __init__(self,port=5000,ip='10.1.1.6'):
+    def __init__(self,ip='10.1.1.6',port=5000):
         self.HOST_IP = ip #124.169.15.130'#'49.181.246.235'
-        self.HOST_PORT = port  #works on port 80 but not 5000 w definitly a firewall issue
+        self.HOST_PORT = int(port)  #works on port 80 but not 5000 w definitly a firewall issue
         self.IPV4_ADDRESS = (self.HOST_IP,self.HOST_PORT)
         self.socket = None
         self.BUFFSIZE = 2048
         self.msg_buffer = ''
         self.local_port = ()
         self.exit = False
+        self.gui = gui.Qui()
+        self.messages=[]
 
     def create_socket(self):
         print("Creating socket")
@@ -77,17 +80,13 @@ class Client:
                 self.exit = True
                 return
             print(recieved_msg)    
-    def send_message_thread(self):
+    '''def send_message_thread(self):
         while True:
-            message = input('')
-            c.send_message(message)
-            if message == '(q)':
-                self.exit = True
+           pass
+    '''
 
 
-
-
-c = Client(int(sys.argv[1]),sys.argv[2])
+c = Client(sys.argv[1],sys.argv[2])
 
     
 c.create_socket()
@@ -96,12 +95,23 @@ c.connect_to_server()
 recv_thread = threading.Thread(target=c.get_message_thread,daemon=True)
 recv_thread.start()
 
+'''
 send_thread = threading.Thread(target=c.send_message_thread,daemon=True)
 send_thread.start()
+'''
+
 
 signal.signal(signal.SIGINT, c.signal_handler)
 
 while not c.exit:
-    pass        
+    message = input('')
+    c.send_message(c.gui.send(message + '\n'))
+    print(c.exit)
+    if message == '(q)':
+        c.exit = True
+
+    #tkinter isn't threadsafe so updates need to happen in main loop
+    c.gui.window.update_idletasks()
+    c.gui.window.update()
 sys.exit()
 
