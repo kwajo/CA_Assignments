@@ -21,6 +21,7 @@ class Client:
         self.exit = False
         self.gui = gui.Qui()
         self.messages=[]
+        self.message = None
 
     def create_socket(self):
         print("Creating socket")
@@ -79,11 +80,13 @@ class Client:
                 print('connection closed by server')
                 self.exit = True
                 return
-            print(recieved_msg)    
-    '''def send_message_thread(self):
+            print(recieved_msg)   
+
+
+    def send_message_thread(self):
         while True:
-           pass
-    '''
+           self.message = input('')
+    
 
 
 c = Client(sys.argv[1],sys.argv[2])
@@ -95,23 +98,32 @@ c.connect_to_server()
 recv_thread = threading.Thread(target=c.get_message_thread,daemon=True)
 recv_thread.start()
 
-'''
+
 send_thread = threading.Thread(target=c.send_message_thread,daemon=True)
 send_thread.start()
-'''
+
 
 
 signal.signal(signal.SIGINT, c.signal_handler)
 
 while not c.exit:
-    message = input('')
-    c.send_message(c.gui.send(message + '\n'))
-    print(c.exit)
-    if message == '(q)':
-        c.exit = True
+    
+    if c.gui.exit:
+        print('close')
+        c.send_message('(q)')
+        c.exit=True
+       # break        
 
-    #tkinter isn't threadsafe so updates need to happen in main loop
-    c.gui.window.update_idletasks()
-    c.gui.window.update()
+    if c.message:
+        if c.message == '(q)':
+            c.send_message('(q)')
+            c.exit=True
+        c.send_message(c.gui.send(c.message + '\n'))
+    try:
+        c.gui.window.update_idletasks()
+        c.gui.window.update()
+    except:
+        c.send_message('(q)')
+        sys.exit()
 sys.exit()
 

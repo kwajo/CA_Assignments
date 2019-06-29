@@ -5,18 +5,29 @@ class Qui:
 
     msgs = ['a','b','c','d','e']
     conns = ['10.1.1.5','10.1.1.6','10.1.1.102','10.1.1.35','10.1.1.78','10.1.1.11','10.1.1.19','10.1.1.220','10.1.1.74','10.1.1.13']
-
+    
+    
+    def _exit(self):
+        print('shutting_down')
+        try:
+            self.window.destroy()
+            print('shutdown success')
+        except:
+            print('failed to destroy')
+    
     def __init__(self,messages=msgs,connections=conns):
+        self.exit = False
         self.bg = 'lightgreen'
         self.fg = 'black'
         #self.msg = messages
         self.conns =connections
-       
+    
         self.window = t.Tk()
         self.window.title("QwackChatRoom")
         self.window.minsize(width=600,height=560)
         self.window.geometry('500x500')
 
+        self.window.protocol('WM_DELETE_WINDOW',self._exit)
 
         self.conns_frame = t.Frame(bg='blue',width=3)
         self.conns_frame.pack(side=t.RIGHT)
@@ -61,12 +72,7 @@ class Qui:
         self.chat_input = ScrolledText(self.chat_frame)#,height=5)
         self.chat_input.pack(side =t.BOTTOM,fill=t.BOTH,padx=10,pady=10)
 
-        """
-        logo = t.PhotoImage(Image.open('logo.png'))
-        print(logo)
-        logo = t.Label(self.menu_frame,image=logo)
-        logo.pack(side=t.TOP)
-        """
+        
 
 
         
@@ -82,6 +88,7 @@ class Qui:
             self.chat_input.delete('1.0',t.END)
             return msg
         return None
+
 
 
     def close(self):

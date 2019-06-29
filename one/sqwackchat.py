@@ -139,6 +139,7 @@ class Server:
                     from the connections.
                     '''
                     if data == '(q)':
+                        print('{} has disconnected'.format(addr))
                         self.close_connection(conn,addr)
                         return
 
