@@ -6,6 +6,7 @@ import queue
 import sys
 import time
 import signal
+import pickle
 #Setup Socket
 class Server:
 
@@ -221,7 +222,7 @@ class Server:
         print("listening for connections")
         self.socket.listen(attempts)
         
-    
+        #c.gui.send(c.gui.message + '\n')
         print("Starting broadcast thread")
         broadcast_thread = threading.Thread(target=self.broadcast_message_thread,args=(self.queue,),daemon=True)
         broadcast_thread.start()
@@ -237,9 +238,13 @@ class Server:
             conn,addr = self.socket.accept()
             #print('connection formed with addr: {} and conn: {} '.format(addr,conn))
             self.connections.append((conn,addr))
-            print('Connections')
-            for conn,addr in self.connections:
-                print(addr)
+        
+        # 
+           # pickled_conns = [addr[1] for addr in self.connections]
+           # pickled_conns=pickle.dumps(pickled_conns)
+           # self.broadcast_message(pickled_conns)
+        
+            
             self.threads.append(threading.Thread(target=self.echo_server,args=(conn,addr,self.queue,),daemon=True))
             self.threads[-1].start()
             self.broadcast_message('{} Connected'.format(addr),addr)

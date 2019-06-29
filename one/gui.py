@@ -17,8 +17,9 @@ class Qui:
     
     def __init__(self,messages=msgs,connections=conns):
         self.exit = False
-        self.bg = 'lightgreen'
-        self.fg = 'black'
+        self.bg = 'black'
+        self.fg = 'white'
+        self.message = None
         #self.msg = messages
         self.conns =connections
     
@@ -79,6 +80,7 @@ class Qui:
         
         
     def send(self,msg=None):
+        print('###############################################################')
         if not msg: 
             msg = self.chat_input.get("1.0",t.END)
         if len(msg) > 1:
@@ -86,6 +88,7 @@ class Qui:
             self.chat_window.insert(t.END,msg)
             self.chat_window.configure(state='disabled')
             self.chat_input.delete('1.0',t.END)
+            self.message = msg
             return msg
         return None
 

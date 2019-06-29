@@ -19,9 +19,10 @@ class Client:
         self.msg_buffer = ''
         self.local_port = ()
         self.exit = False
-        self.gui = gui.Qui()
+        self.gui = None
         self.messages=[]
         self.message = None
+        self.rcv_message = None
 
     def create_socket(self):
         print("Creating socket")
@@ -76,6 +77,7 @@ class Client:
             print(self.HOST_PORT)
             recieved_msg = c.recieve_message().decode('utf-8')
             print(recieved_msg)
+            self.rcv_message = recieved_msg
             if recieved_msg == 'kill':
                 print('connection closed by server')
                 self.exit = True
@@ -85,7 +87,7 @@ class Client:
 
     def send_message_thread(self):
         while True:
-           self.message = input('')
+            self.message = input('')
     
 
 
@@ -94,7 +96,7 @@ c = Client(sys.argv[1],sys.argv[2])
     
 c.create_socket()
 c.connect_to_server()
-
+c.gui = gui.Qui()
 recv_thread = threading.Thread(target=c.get_message_thread,daemon=True)
 recv_thread.start()
 
@@ -112,17 +114,33 @@ while not c.exit:
         print('close')
         c.send_message('(q)')
         c.exit=True
-       # break        
+        break
+
+    if c.gui.message:
+        print('gui')
+        c.gui.send(c.gui.message + '\n')
+        c.send_message(c.gui.message)
+        c.gui.message = None
+
+    if c.rcv_message:
+        print('there is a message')
+        c.gui.send(c.rcv_message + '\n')
+        c.rcv_message = None
+        c.gui.message = None
+
 
     if c.message:
+        print('termi')
         if c.message == '(q)':
             c.send_message('(q)')
             c.exit=True
         c.send_message(c.gui.send(c.message + '\n'))
+        c.message = None
     try:
         c.gui.window.update_idletasks()
         c.gui.window.update()
     except:
+        print('ded')
         c.send_message('(q)')
         sys.exit()
 sys.exit()
