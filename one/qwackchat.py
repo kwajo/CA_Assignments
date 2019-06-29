@@ -116,15 +116,18 @@ while not c.exit:
         c.exit=True
         break
 
+    '''
+    if the gui has a message
+    '''
     if c.gui.message:
         print('gui')
-        c.gui.send(c.gui.message + '\n')
+     #   c.gui.send(c.gui.message + '\n')
         c.send_message(c.gui.message)
         c.gui.message = None
 
     if c.rcv_message:
         print('there is a message')
-        c.gui.send(c.rcv_message + '\n')
+        c.gui.send(c.rcv_message )
         c.rcv_message = None
         c.gui.message = None
 
@@ -134,7 +137,7 @@ while not c.exit:
         if c.message == '(q)':
             c.send_message('(q)')
             c.exit=True
-        c.send_message(c.gui.send(c.message + '\n'))
+        c.send_message(c.gui.send(c.message ))
         c.message = None
     try:
         c.gui.window.update_idletasks()

@@ -247,7 +247,7 @@ class Server:
             
             self.threads.append(threading.Thread(target=self.echo_server,args=(conn,addr,self.queue,),daemon=True))
             self.threads[-1].start()
-            self.broadcast_message('{} Connected'.format(addr),addr)
+            self.broadcast_message('\n{} Connected. Welcome to qwackchat\n'.format(addr),addr)
 
 
 

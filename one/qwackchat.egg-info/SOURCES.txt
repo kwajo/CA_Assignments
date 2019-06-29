@@ -1,3 +1,4 @@
+gui.py
 qwackchat
 setup.py
 sqwackchat

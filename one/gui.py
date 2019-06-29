@@ -20,13 +20,14 @@ class Qui:
         self.bg = 'black'
         self.fg = 'white'
         self.message = None
+        
         #self.msg = messages
         self.conns =connections
     
         self.window = t.Tk()
         self.window.title("QwackChatRoom")
-        self.window.minsize(width=600,height=560)
-        self.window.geometry('500x500')
+        self.window.minsize(width=650,height=560)
+        self.window.geometry('650x600')
 
         self.window.protocol('WM_DELETE_WINDOW',self._exit)
 
@@ -72,16 +73,14 @@ class Qui:
         '''
         self.chat_input = ScrolledText(self.chat_frame)#,height=5)
         self.chat_input.pack(side =t.BOTTOM,fill=t.BOTH,padx=10,pady=10)
-
         
-
-
         
         
         
     def send(self,msg=None):
         print('###############################################################')
         if not msg: 
+            print('no message')
             msg = self.chat_input.get("1.0",t.END)
         if len(msg) > 1:
             self.chat_window.configure(state='normal')
