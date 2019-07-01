@@ -7,6 +7,7 @@ from datetime import datetime
 import threading
 import signal
 import gui
+import pickle
 
 class Client:
 
@@ -23,6 +24,8 @@ class Client:
         self.messages=[]
         self.message = None
         self.rcv_message = None
+        self.connections = []
+        self.new_connection = False
 
     def create_socket(self):
         print("Creating socket")
@@ -61,7 +64,9 @@ class Client:
     
     def recieve_message(self):
         data = self.socket.recv(self.BUFFSIZE)
-        return data
+        if len(data) > 0:
+            return data
+        return None
     
     def signal_handler(self,signal, frame):
         try:
@@ -74,15 +79,23 @@ class Client:
             
     def get_message_thread(self):
         while True:
-            print(self.HOST_PORT)
-            recieved_msg = c.recieve_message().decode('utf-8')
-            print(recieved_msg)
-            self.rcv_message = recieved_msg
-            if recieved_msg == 'kill':
-                print('connection closed by server')
-                self.exit = True
-                return
-            print(recieved_msg)   
+            recieved_msg = c.recieve_message()#.decode('utf-8')
+            try:
+                clients = pickle.loads(recieved_msg)
+                self.new_connection = True
+                self.connections = clients
+                
+                print(clients)
+            except:
+                if not recieved_msg:
+                    self.exit =True
+                    sys.exit()
+                self.rcv_message = recieved_msg.decode('utf-8')
+                if self.rcv_message == 'kill':
+                    print('connection closed by server')
+                    self.exit = True
+                    return
+                print(self.rcv_message)   
 
 
     def send_message_thread(self):
@@ -97,6 +110,7 @@ c = Client(sys.argv[1],sys.argv[2])
 c.create_socket()
 c.connect_to_server()
 c.gui = gui.Qui()
+c.gui.recieve('\nHi and welcome to Qwackchat\nYour connection > [{}:{}]\n'.format(c.local_port[0],c.local_port[1]))
 recv_thread = threading.Thread(target=c.get_message_thread,daemon=True)
 recv_thread.start()
 
@@ -120,20 +134,20 @@ while not c.exit:
     if the gui has a message
     '''
     if c.gui.message:
-        print('gui')
-     #   c.gui.send(c.gui.message + '\n')
         c.send_message(c.gui.message)
         c.gui.message = None
 
     if c.rcv_message:
-        print('there is a message')
-        c.gui.send(c.rcv_message )
+        c.gui.recieve(c.rcv_message)
+       # c.gui.send(c.rcv_message )
         c.rcv_message = None
         c.gui.message = None
 
+    if c.new_connection:
+        c.gui.update_connections(c.connections)
+        c.new_connection = False
 
     if c.message:
-        print('termi')
         if c.message == '(q)':
             c.send_message('(q)')
             c.exit=True
@@ -143,7 +157,6 @@ while not c.exit:
         c.gui.window.update_idletasks()
         c.gui.window.update()
     except:
-        print('ded')
         c.send_message('(q)')
         sys.exit()
 sys.exit()

@@ -142,6 +142,7 @@ class Server:
                     if data == '(q)':
                         print('{} has disconnected'.format(addr))
                         self.close_connection(conn,addr)
+                        self.pickle_connections()
                         return
 
                     '''
@@ -205,9 +206,23 @@ class Server:
             time.sleep(1)
         sys.exit()
 
+
+    def pickle_connections(self):
+            pickled_conns = [addr[1] for addr in self.connections]
+            pickled_conns=pickle.dumps(pickled_conns)
+            self.broadcast_bytes(pickled_conns)   
     '''
 
     '''
+    def broadcast_bytes(self,data):
+        for conn, addr in self.connections:
+            try:
+                print(addr)         
+                conn.sendall(data)
+            except ValueError as e:
+                print(e)
+            # return
+
     def broadcast_message(self,data,override=True,all_conns=False):
         for conn, addr in self.connections:
             try:
@@ -239,24 +254,27 @@ class Server:
             #print('connection formed with addr: {} and conn: {} '.format(addr,conn))
             self.connections.append((conn,addr))
         
-        # 
-           # pickled_conns = [addr[1] for addr in self.connections]
-           # pickled_conns=pickle.dumps(pickled_conns)
-           # self.broadcast_message(pickled_conns)
         
-            
+            pickled_conns = [addr[1] for addr in self.connections]
+            pickled_conns=pickle.dumps(pickled_conns)
+            self.broadcast_bytes(pickled_conns)    
             self.threads.append(threading.Thread(target=self.echo_server,args=(conn,addr,self.queue,),daemon=True))
             self.threads[-1].start()
-            self.broadcast_message('\n{} Connected. Welcome to qwackchat\n'.format(addr),addr)
+            self.broadcast_message('\n\n-----------------------------------\n{} Connected.\nGive them a warm welcome\n-----------------------------------\n'.format(addr),addr)
 
 
 
 #use argparse
-s = Server(int(sys.argv[1]))
-s.create_socket()
-signal.signal(signal.SIGINT, s.signal_handler)
-s.launch()
 
+def main():    
+    s = Server(int(sys.argv[1]))
+    s.create_socket()
+    signal.signal(signal.SIGINT, s.signal_handler)
+    s.launch()
+
+
+if __name__ == '__main__':
+    main()
 
 
     #recieve data

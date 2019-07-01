@@ -40,11 +40,9 @@ class Qui:
         self.conns_header = t.Label(self.menu_frame,text="Connections",bg=self.bg,fg=self.fg, font=("",15))
         self.conns_header.pack(fill=t.X,side=t.TOP,ipadx = 10,ipady=28)
 
-        self.conns_text = ScrolledText(self.menu_frame,width=10,height=15)
+        self.conns_text = ScrolledText(self.menu_frame,width=24,height=15)
         self.conns_text.pack(fill=t.X,padx=10,pady=10)
 
-        for conn in self.conns:
-            self.conns_text.insert(t.END,conn+'\n')
 
         self.chat_frame = t.Frame(bg=self.bg)
         self.chat_frame.pack(fill=t.BOTH)
@@ -78,19 +76,36 @@ class Qui:
         
         
     def send(self,msg=None):
-        print('###############################################################')
         if not msg: 
-            print('no message')
             msg = self.chat_input.get("1.0",t.END)
         if len(msg) > 1:
+            print('Pro')
             self.chat_window.configure(state='normal')
             self.chat_window.insert(t.END,msg)
             self.chat_window.configure(state='disabled')
             self.chat_input.delete('1.0',t.END)
             self.message = msg
+            #print(msg)
             return msg
         return None
 
+    def recieve(self,msg):
+        print('yolo')
+        if len(msg) > 1:
+            self.chat_window.configure(state='normal')
+            self.chat_window.insert(t.END,msg)
+            self.chat_window.configure(state='disabled')
+            self.chat_input.delete('1.0',t.END)
+            return msg
+        return None
+
+    def update_connections(self,connections):
+        self.conns_text.configure(state='normal')
+        self.conns_text.delete('1.0',t.END)
+        print(connections)
+        for ip, port in connections:
+            self.conns_text.insert(t.END,str(ip) +':' + str(port)+'\n')
+        self.conns_text.configure(state='disabled')
 
 
     def close(self):
