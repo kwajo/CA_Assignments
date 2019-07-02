@@ -60,7 +60,9 @@ class Server:
         self.connections =[] 
 
         
-
+    def show_conns(self):
+        for i in range (0,len(self.connections)):
+            print('Connection: {} \tIndex:{}'.format(self.connections[i][1],i))
 
     '''
     def server_input_thread()
@@ -83,12 +85,25 @@ class Server:
             if data == 'kill':
                 self.kill_clients()
             
+            if data == 'kick':
+                self.show_conns()
+                index = input('Enter index: ')
+                #try:
+                index = int(index)
+                conn  = self.connections[index][0]
+                addr  = self.connections[index][1]
+                self.send_message('kill',conn,addr)
+                self.close_connection(conn,addr)
+                self.pickle_connections()
+                self.show_conns()
+                #except:
+                #    print('not a valid input')
+
             '''
             loop throuh connections and print all
             '''
             if data == 'con':
-                for conn, addr in self.connections:
-                    print(addr)
+                self.show_conns()
 
 
     def create_socket(self):
@@ -211,9 +226,7 @@ class Server:
             pickled_conns = [addr[1] for addr in self.connections]
             pickled_conns=pickle.dumps(pickled_conns)
             self.broadcast_bytes(pickled_conns)   
-    '''
 
-    '''
     def broadcast_bytes(self,data):
         for conn, addr in self.connections:
             try:
@@ -231,7 +244,16 @@ class Server:
             except ValueError as e:
                 print(e)
             # return
-           
+
+    def send_message(self,data,conn,addr):
+        try:
+            print(addr)         
+            conn.sendall(bytes('{}'.format(data),'UTF-8'))
+        except ValueError as e:
+            print(e)
+        # return
+
+
     def launch(self,attempts=10):
 
         print("listening for connections")

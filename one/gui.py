@@ -79,7 +79,6 @@ class Qui:
         if not msg: 
             msg = self.chat_input.get("1.0",t.END)
         if len(msg) > 1:
-            print('Pro')
             self.chat_window.configure(state='normal')
             self.chat_window.insert(t.END,msg)
             self.chat_window.configure(state='disabled')
@@ -90,7 +89,6 @@ class Qui:
         return None
 
     def recieve(self,msg):
-        print('yolo')
         if len(msg) > 1:
             self.chat_window.configure(state='normal')
             self.chat_window.insert(t.END,msg)
