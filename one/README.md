@@ -71,9 +71,13 @@ commands packaged into the server to control users that are connected.
 
 Standard and simple. That's our motto~!
 
-Server: ![alt text](https://i.imgur.com/UnGSVOQ.png "server image")
+Clients:
 
-Client:![alt text](https://i.imgur.com/2Jtcx77.png "client image")
+![alt text](https://i.imgur.com/UnGSVOQ.png "server image")
+
+Server:
+
+![alt text](https://i.imgur.com/2Jtcx77.png "client image")
 
 
 
