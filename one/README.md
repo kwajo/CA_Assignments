@@ -71,11 +71,11 @@ commands packaged into the server to control users that are connected.
 
 Standard and simple. That's our motto~!
 
-Clients:
+#### Clients:
 
 ![alt text](https://i.imgur.com/UnGSVOQ.png "server image")
 
-Server:
+#### Server:
 
 ![alt text](https://i.imgur.com/2Jtcx77.png "client image")
 
