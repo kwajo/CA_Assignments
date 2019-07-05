@@ -20,6 +20,7 @@ class Qui:
         self.bg = 'black'
         self.fg = 'white'
         self.message = None
+
         
         #self.msg = messages
         self.conns =connections
@@ -80,7 +81,7 @@ class Qui:
             msg = self.chat_input.get("1.0",t.END)
         if len(msg) > 1:
             self.chat_window.configure(state='normal')
-            self.chat_window.insert(t.END,msg)
+            self.chat_window.insert(t.END,"you said: "+msg)
             self.chat_window.configure(state='disabled')
             self.chat_input.delete('1.0',t.END)
             self.message = msg

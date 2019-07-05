@@ -7,7 +7,17 @@ import sys
 import time
 import signal
 import pickle
-#Setup Socket
+
+'''
+The Sqwackchat server class is used to make a multi client server object that
+manages the connections of qwackchat clients.
+
+it comes with a limited range of features.
+-kill #kills all connections but keeps server live
+-kick #follow the promps to kill a specific connection
+-con  #lists connected clients
+'''
+
 class Server:
 
     def __init__(self,port=5000):
@@ -221,30 +231,55 @@ class Server:
             time.sleep(1)
         sys.exit()
 
+    '''
+    pickle_connections
+    I was originally going to try use an exploit in pickle that lets me execute code with
+    the first argument so I could run python code on clients by sending it as a pickle file.
+    Alas it appeared that I would have to change my code too much to make it work. I thought it
+    would be a fun example of social engineering.
 
+    Anyway this function pickles the connection tuple so that it can be sent over sockets easily
+    it pickles the data and sends the bytes to the client
+    '''
     def pickle_connections(self):
             pickled_conns = [addr[1] for addr in self.connections]
             pickled_conns=pickle.dumps(pickled_conns)
             self.broadcast_bytes(pickled_conns)   
 
+
+    '''
+    boradcast_bytes
+    this function sends byte data to connect clients
+    '''
     def broadcast_bytes(self,data):
         for conn, addr in self.connections:
             try:
                 print(addr)         
                 conn.sendall(data)
             except ValueError as e:
-                print(e)
+                print('connection with {} ended abruptly'.format(addr))
+                self.close_connection(conn,addr)
             # return
-
-    def broadcast_message(self,data,override=True,all_conns=False):
+    '''
+    broadcast_message
+    this function broadcasts strings to all connected clients
+    '''
+    def broadcast_message(self,data,override=True):
         for conn, addr in self.connections:
             try:
                 print(addr)         
                 conn.sendall(bytes('{}'.format(data),'UTF-8'))
-            except ValueError as e:
-                print(e)
+            except BrokenPipeError as e:
+                print('connection with {} ended abruptly'.format(addr))
+                self.close_connection(conn,addr)
+              
             # return
 
+    '''
+    send_message
+
+    sends a message to an individual connection
+    '''
     def send_message(self,data,conn,addr):
         try:
             print(addr)         
@@ -253,7 +288,11 @@ class Server:
             print(e)
         # return
 
-
+    '''
+    launch
+    this function runs the required functions to start the server. It starts various threads
+    and enters the main loop where it listens for new connections
+    '''
     def launch(self,attempts=10):
 
         print("listening for connections")
@@ -299,8 +338,3 @@ if __name__ == '__main__':
     main()
 
 
-    #recieve data
-
-    #send data to server and client
-
-    #recieve closing message

@@ -8,7 +8,10 @@ import threading
 import signal
 import gui
 import pickle
-
+'''
+The qwackchat class is used to setup a qwackchat client that will connect to
+the server and communicate with other clients via the GUI interface
+'''
 class Client:
 
     def __init__(self,ip='10.1.1.6',port=5000):
@@ -26,7 +29,10 @@ class Client:
         self.rcv_message = None
         self.connections = []
         self.new_connection = False
-
+    '''
+    create_socket
+    Creates a socket object to connect to host address
+    '''
     def create_socket(self):
         print("Creating socket")
         print(self.IPV4_ADDRESS)
@@ -40,7 +46,11 @@ class Client:
             print('Socket Created')
         except socket.error as e:
             print (e)
-
+    '''
+    connect_to_server
+    attempts to connect to the host server. must be called after the socket object is created.
+    will exit on failure
+    '''
 
     def connect_to_server(self):
         print('Connecting to QwackChat')
@@ -55,19 +65,31 @@ class Client:
             print ('Connection to-->    {}:{} failed\nExiting'.format(self.HOST_IP,self.HOST_PORT))
             sys.exit()
 
+    '''
+    send_message
+    sends a message to the server 
+    '''
     def send_message(self, message):
         msg = bytes(message,'UTF-8')
         try:
             self.socket.send(msg)
         except socket.error as e:
             print(e)
-    
+    '''
+    returns data transimtted from the server
+    '''
+
     def recieve_message(self):
         data = self.socket.recv(self.BUFFSIZE)
         if len(data) > 0:
             return data
         return None
-    
+    '''
+    signal_handler
+    is used to handle quitting elegantly. sends a "(q)" to the server so
+    the server knows it has been disconnected (although this may no longer be necessary)
+    then exits 
+    '''
     def signal_handler(self,signal, frame):
         try:
             self.send_message('(q)')
@@ -76,7 +98,14 @@ class Client:
         finally:
             print('\nquitting')
             sys.exit()
-            
+
+    '''
+    get_message_thread
+    this thread is a loop that recieves messages from the socket connection.
+    on a message recieved it checks if it's a pickle (possibly badly if im a noob
+    and I actually did build the exploit in) if the message is kill the server has
+    closed the connection and the socket will close. otherwise it deletes the message
+    '''        
     def get_message_thread(self):
         while True:
             recieved_msg = c.recieve_message()#.decode('utf-8')
@@ -97,20 +126,29 @@ class Client:
                     return
                 print(self.rcv_message)   
 
-
+    '''
+    i refuse to comment this function with helpful information
+    '''
     def send_message_thread(self):
         while True:
             self.message = input('')
     
-
+'''
+setup the socket and gui
+'''
 
 c = Client(sys.argv[1],sys.argv[2])
 
-    
+
 c.create_socket()
 c.connect_to_server()
 c.gui = gui.Qui()
 c.gui.recieve('\nHi and welcome to Qwackchat\nYour connection > [{}:{}]\n'.format(c.local_port[0],c.local_port[1]))
+
+'''
+start send and recieve threads
+'''
+
 recv_thread = threading.Thread(target=c.get_message_thread,daemon=True)
 recv_thread.start()
 
@@ -122,6 +160,10 @@ send_thread.start()
 
 signal.signal(signal.SIGINT, c.signal_handler)
 
+'''
+this is the main loop which handles all gui operations as the tkinter module is not threadsafe
+
+'''
 while not c.exit:
     
     if c.gui.exit:
