@@ -1,4 +1,4 @@
-#Thank you for installing the QwackChat chatroom.
+# Thank you for installing the QwackChat chatroom.
 
 **Qwackchat** is a private lan based chatroom written in python3. The chatroom allows users to communicate with one another locally via sockets and reduces the ability for **data harvesters** such as google, amazon, facebook and others from viewing your communications.
 
@@ -11,20 +11,20 @@
 **The Author of QwackChat claims no liability or responsibility for any actions take by *you* the user.**
 
 
-##Installation
+## Installation
 
 1. open a python3 terminal 
 2. type pip3 install qwackchat
 
-##Dependencies
+## Dependencies
 
 sqwackchat.py, qwackchat.py qui.py
 
-##System Requirements
+## System Requirements
 
 A linux or Mac computer with python3 & pip3 installed
 
-##Hosting a server 
+## Hosting a server 
 
 1. open a terminal
 2. type *ifconfig* and find your lan address **typically 10.0.xx.xx or 192.168.xx.xx**
@@ -34,13 +34,13 @@ A linux or Mac computer with python3 & pip3 installed
 **sub your lan address for public ip and forward your desired port to try over your public IP**
 
 
-##Running a client
+## Running a client
 
 1. aquire server ip and port from host 
 2. open a terminal
 3. type *qwackchat server_ip port*
 
-##Using the GUI
+## Using the GUI
 
 **This is  fairly straight forward**
 
@@ -52,7 +52,7 @@ view connected clients in the connections box **right text box**
 
 
 
-#User Interaction and Experience
+# User Interaction and Experience
 
 It's an anonamous chatroom with a user interface that lets users talk to
 one another. As people are well familiar with chat applications today 

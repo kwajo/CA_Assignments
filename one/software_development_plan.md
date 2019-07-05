@@ -1,6 +1,6 @@
-#Software Development Plan
+# Software Development Plan
 
-###(T1A2)1
+### (T1A2)1
 There are many chatroom applications available today some notable ones are facebook messenger, skype and slack. Good or bad these applications have helped streamline business operations, speedup scientific advancements and globalise the world and helped kickstart the new industrial revolution. However this rapid unchecked growth has not come without its own problems.
 
 Data privacy laws are murky, many are either non existent or outdated and of the current laws many operate in favour of large tech giants and government agencies and strip the rest of us of our privacy. A particularly vicious example is the [chinese social credit system](https://www.businessinsider.com.au/china-social-credit-system-punishments-and-rewards-explained-2018-4?r=US&IR=T “”) 
@@ -19,17 +19,17 @@ QwackChat is installed as a pip3 package and contains a server module **sqwackch
 
 The module works as follows. A host launches **sqwackchat** with a specified port number and then clients can connect to the **sqwackchat** server by launching **qwackchat** with the host IP and port number. **qwackchat** will open a GUI and users can communicate with each other. Upon closing the GUI and terminal the messages will be lost (Although data recovery may be possible).
 
-###(T1A2)2
-##Features:
+### (T1A2)2
+## Features:
 
-####Server:
+#### Server:
 The server is used to host connected clients. It must run before and clients connect and is used to transmit messages between clients. The Server is able to see messages sent by clients and can perform a soft reset by kicking all clients from the ChatRoom. The server is capable of connecting multiple clients at once.
 
-####Client:
+#### Client:
 The client is used to connect with the server. It must be run after the server has started and requires knowledge of the server LAN ip and port to connect. Once connected users are able to send their messages everyone in the chatroom by typing into the terminal. This is not the recommended way to communicate with other users and although functional, produces off results.
 
 
-####GUI:
+#### GUI:
 The GUI is the preferred way for users to communicate between one another. It has the following features. A message window for viewing sent and received messages, an input window for writing and sending messages and a connections window for viewing users connected to the chat.
 
 
@@ -39,8 +39,8 @@ The GUI is the preferred way for users to communicate between one another. It ha
 
 
 
- ##Implementation Plan
-###(T1A2)6
+ ## Implementation Plan
+### (T1A2)6
 As this project requires me implementing numerous technologies which are new to me my implementation plan has included numerous information gathering steps and prototypes of increasing complexity. After each prototype it’s necessary for me to research how additional to implement additional features. Having a working prototype allows me to better visualise how said feature will be integrated.
 
 Information gathering:
