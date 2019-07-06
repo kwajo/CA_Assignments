@@ -12,7 +12,7 @@ I’m currently adding a kick command so that I can selectively kick users from 
 
 
 
-#Development Log (2) (5.07.19)
+# Development Log (2) (5.07.19)
 
 
 The project and documentation is almost complete. There were a few additional features that I wanted to add such as naming yourself in the server, changing text colours and background, including argparse (which really is far more practical than my solution) and allowing clients to whisper one another. However due to time constraints and poorly written code/decisions early on i’ve decided to leave the project as is.  There may still be a few crash cases as it’s hard to simulate a live session and user input however the majority of crashes are not too severe so I’m happy with how things have gone.

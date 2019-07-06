@@ -43,6 +43,7 @@ class Qui:
 
         self.conns_text = ScrolledText(self.menu_frame,width=24,height=15)
         self.conns_text.pack(fill=t.X,padx=10,pady=10)
+        
 
 
         self.chat_frame = t.Frame(bg=self.bg)
@@ -65,6 +66,7 @@ class Qui:
         '''
         self.send_btn = t.Button(self.chat_frame,text="send",bg=self.bg,fg=self.fg,command=self.send,height=4)
         self.send_btn.pack(side =t.LEFT,padx=10,pady=10)
+        self.window.bind('<Return>', self.send_enter)
 
 
         '''
@@ -74,14 +76,31 @@ class Qui:
         self.chat_input.pack(side =t.BOTTOM,fill=t.BOTH,padx=10,pady=10)
         
         
-        
-        
-    def send(self,msg=None):
+    def send_enter(self,msg=None):
+   #     print(msg)
+        msg = self.chat_input.get("1.0",t.END)[:-1]
         if not msg: 
             msg = self.chat_input.get("1.0",t.END)
         if len(msg) > 1:
             self.chat_window.configure(state='normal')
             self.chat_window.insert(t.END,"you said: "+msg)
+            self.chat_window.see(t.END)
+            self.chat_window.configure(state='disabled')
+            self.chat_input.delete('1.0',t.END)
+            self.message = msg
+            #print(msg)
+            return msg
+        return None    
+        
+    def send(self,msg=None):
+   #     print(msg)
+        msg = self.chat_input.get("1.0",t.END)
+        if not msg: 
+            msg = self.chat_input.get("1.0",t.END)
+        if len(msg) > 1:
+            self.chat_window.configure(state='normal')
+            self.chat_window.insert(t.END,"you said: "+msg)
+            self.chat_window.see(t.END)
             self.chat_window.configure(state='disabled')
             self.chat_input.delete('1.0',t.END)
             self.message = msg
@@ -93,6 +112,7 @@ class Qui:
         if len(msg) > 1:
             self.chat_window.configure(state='normal')
             self.chat_window.insert(t.END,msg)
+            self.chat_window.see(t.END)
             self.chat_window.configure(state='disabled')
             self.chat_input.delete('1.0',t.END)
             return msg

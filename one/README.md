@@ -10,7 +10,12 @@
 
 **The Author of QwackChat claims no liability or responsibility for any actions take by *you* the user.**
 
+**NOTE: the terminal application does not use the CLI for communication anymore. prior versions allowed this but the feature has since been discontinuted**
 
+## System requirements
+1. A linux computer
+2. the [tkinter](https://www.activestate.com/products/activetcl/downloads/) package must be downloaded manually prior to running.
+3. python3 installed
 ## Installation
 
 1. open a python3 terminal 
@@ -19,10 +24,6 @@
 ## Dependencies
 
 sqwackchat.py, qwackchat.py qui.py
-
-## System Requirements
-
-A linux or Mac computer with python3 & pip3 installed
 
 ## Hosting a server 
 
