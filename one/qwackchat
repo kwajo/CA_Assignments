@@ -14,7 +14,7 @@ the server and communicate with other clients via the GUI interface
 '''
 class Client:
 
-    def __init__(self,ip='10.1.1.6',port=5000):
+    def __init__(self,ip='10.0.74.88',port=5000):
         self.HOST_IP = ip #124.169.15.130'#'49.181.246.235'
         self.HOST_PORT = int(port)  #works on port 80 but not 5000 w definitly a firewall issue
         self.IPV4_ADDRESS = (self.HOST_IP,self.HOST_PORT)
@@ -129,16 +129,16 @@ class Client:
     '''
     i refuse to comment this function with helpful information
     '''
-    def send_message_thread(self):
+    '''def send_message_thread(self):
         while True:
             self.message = input('')
-    
+    '''
 '''
 setup the socket and gui
 '''
 
-c = Client(sys.argv[1],sys.argv[2])
 
+c = Client(sys.argv[1],sys.argv[2])
 
 c.create_socket()
 c.connect_to_server()
@@ -149,12 +149,15 @@ c.gui.recieve('\nHi and welcome to Qwackchat\nYour connection > [{}:{}]\n'.forma
 start send and recieve threads
 '''
 
-recv_thread = threading.Thread(target=c.get_message_thread,daemon=True)
+recv_thread = threading.Thread(target=c.get_message_thread)
+recv_thread.daemon = True
 recv_thread.start()
 
-
-send_thread = threading.Thread(target=c.send_message_thread,daemon=True)
+'''
+send_thread = threading.Thread(target=c.send_message_thread)
+send_thread.daemon = True
 send_thread.start()
+'''
 
 
 
@@ -181,7 +184,6 @@ while not c.exit:
 
     if c.rcv_message:
         c.gui.recieve(c.rcv_message)
-       # c.gui.send(c.rcv_message )
         c.rcv_message = None
         c.gui.message = None
 
@@ -193,7 +195,10 @@ while not c.exit:
         if c.message == '(q)':
             c.send_message('(q)')
             c.exit=True
-        c.send_message(c.gui.send(c.message ))
+        try:
+            c.send_message(c.gui.send(c.message ))
+        except:
+            pass
         c.message = None
     try:
         c.gui.window.update_idletasks()
@@ -202,4 +207,5 @@ while not c.exit:
         c.send_message('(q)')
         sys.exit()
 sys.exit()
+
 

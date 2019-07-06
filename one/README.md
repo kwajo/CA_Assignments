@@ -18,12 +18,12 @@
 3. python3 installed
 ## Installation
 
-1. open a python3 terminal 
+1. open a terminal 
 2. type pip3 install qwackchat
 
 ## Dependencies
 
-sqwackchat.py, qwackchat.py qui.py
+tkinter module
 
 ## Hosting a server 
 

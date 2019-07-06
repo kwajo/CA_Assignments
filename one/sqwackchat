@@ -123,7 +123,7 @@ class Server:
         try:
             self.socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
             print('socket connected')
-        except socket.error as e:
+        except socket.error:
             print ('Failed to open socket')
             sys.exit()
 
@@ -133,7 +133,7 @@ class Server:
             self.socket.bind(self.IPV4_ADDRESS)
             print('socket bound to port {}'.format(self.HOST_PORT))
             return True
-        except socket.error as e:
+        except socket.error :
             print('failed to bind socket\nexiting...')
             sys.exit()
 
@@ -256,7 +256,7 @@ class Server:
             try:
                 print(addr)         
                 conn.sendall(data)
-            except ValueError as e:
+            except ValueError:
                 print('connection with {} ended abruptly'.format(addr))
                 self.close_connection(conn,addr)
             # return
@@ -269,10 +269,10 @@ class Server:
             try:
                 print(addr)         
                 conn.sendall(bytes('{}'.format(data),'UTF-8'))
-            except BrokenPipeError as e:
+            except BrokenPipeError:
                 print('connection with {} ended abruptly'.format(addr))
                 self.close_connection(conn,addr)
-              
+
             # return
 
     '''
@@ -300,15 +300,17 @@ class Server:
         
         #c.gui.send(c.gui.message + '\n')
         print("Starting broadcast thread")
-        broadcast_thread = threading.Thread(target=self.broadcast_message_thread,args=(self.queue,),daemon=True)
+        broadcast_thread = threading.Thread(target=self.broadcast_message_thread,args=(self.queue,))
+        broadcast_thread.daemon = True
         broadcast_thread.start()
-       
+        
         print("Starting Server <command> listener")
-        server_input = threading.Thread(target=self.server_input_thread,daemon=True)
+        server_input = threading.Thread(target=self.server_input_thread)
+        server_input.daemon = True
         server_input.start()
 
         #accept connection
-     
+
 
         while True:
             conn,addr = self.socket.accept()
@@ -319,7 +321,7 @@ class Server:
             pickled_conns = [addr[1] for addr in self.connections]
             pickled_conns=pickle.dumps(pickled_conns)
             self.broadcast_bytes(pickled_conns)    
-            self.threads.append(threading.Thread(target=self.echo_server,args=(conn,addr,self.queue,),daemon=True))
+            self.threads.append(threading.Thread(target=self.echo_server,args=(conn,addr,self.queue,)))
             self.threads[-1].start()
             self.broadcast_message('\n\n-----------------------------------\n{} Connected.\nGive them a warm welcome\n-----------------------------------\n'.format(addr),addr)
 

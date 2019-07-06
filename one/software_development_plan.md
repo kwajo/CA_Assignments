@@ -41,7 +41,7 @@ The GUI is the preferred way for users to communicate between one another. It ha
 
  ## Implementation Plan
 ### (T1A2)6
-As this project requires me implementing numerous technologies which are new to me my implementation plan has included numerous information gathering steps and prototypes of increasing complexity. After each prototype it’s necessary for me to research how additional to implement additional features. Having a working prototype allows me to better visualise how said feature will be integrated.
+As this project requires me implementing numerous technologies which are new to me my implementation plan has included a number of information gathering steps and prototypes of increasing complexity. After each prototype it’s necessary for me to research how additional to implement additional features. Having a working prototype allows me to better visualise how said feature will be integrated.
 
 Information gathering:
 Read up on socket documentation, watch some videos and learn about basic TCP socket implementation.
